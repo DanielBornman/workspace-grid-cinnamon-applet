@@ -89,6 +89,17 @@ MyApplet.prototype = {
         catch (e) {
             global.logError("workspace-grid@hernejj Main Applet Exception: " + e.toString());
         }
+
+        // Enable vertical edge flipping.
+        this.enabledEdgeFlip = global.settings.get_boolean("enable-edge-flip");
+        this.edgeFlipDelay = global.settings.get_int("edge-flip-delay");
+
+        this.edgeTop = new EdgeFlip.EdgeFlipper(St.Side.TOP, this.actionFlipWorkspaceUp);
+        this.edgeTop.enabled = this.enabledEdgeFlip;
+        this.edgeTop.delay = this.edgeFlipDelay;
+        this.edgeBottom = new EdgeFlip.EdgeFlipper(St.Side.BOTTOM, this.actionFlipWorkspaceDown);
+        this.edgeBottom.enabled = this.enabledEdgeFlip;
+        this.edgeBottom.delay = this.edgeFlipDelay;
     },
     
     on_applet_added_to_panel: function () {
@@ -128,6 +139,26 @@ MyApplet.prototype = {
     
     on_panel_height_changed: function() {
         this.ui.update_grid(this.numCols, this.numRows, this._panelHeight);
+    },
+
+    actionFlipWorkspaceUp: function() {
+        var active = global.screen.get_active_workspace();
+        var neighbor = active.get_neighbor(Meta.MotionDirection.UP);
+        if (active != neighbor) {
+            neighbor.activate(global.get_current_time());
+            let [x, y, mods] = global.get_pointer();
+            global.set_pointer(x, global.screen_width - 10);
+        }
+    },
+
+    actionFlipWorkspaceDown: function() {
+        var active = global.screen.get_active_workspace();
+        var neighbor = active.get_neighbor(Meta.MotionDirection.DOWN);
+        if (active != neighbor) {
+            neighbor.activate(global.get_current_time());
+            let [x, y, mods] = global.get_pointer();
+            global.set_pointer(x, 10);
+        }
     },
 };
 
