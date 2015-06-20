@@ -16,6 +16,7 @@ const AppletDir = imports.ui.appletManager.applets['workspace-grid@hernejj'];
 const WorkspaceController = AppletDir.WorkspaceController;
 const BarIndicatorStyle = AppletDir.BarIndicatorStyle;
 const GridStyle = AppletDir.GridStyle;
+const EdgeFlip = imports.ui.edgeFlip;
 
 function registerKeyBindings(registerUpDownKeyBindings) {
     try {
